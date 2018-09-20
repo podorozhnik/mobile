@@ -35,32 +35,38 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Validator("First Name", firstNameInput, "^[A-Z][a-zA-Z]+$");
-                Validator("Last Name", lastNameInput, "^[A-Z][a-zA-Z]+$");
-                Validator("Email", emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$");
-                Validator("Phone", phoneInput, "^\\+?[0-9]{10,16}$");
-                Validator("Password", passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
-                ConfirmPasswordValidator(passwordInput, confirmPasswordInput);
-                if (firstNameInput.getError() == null && lastNameInput.getError() == null && emailInput.getError() == null && phoneInput.getError() == null && passwordInput.getError() == null && confirmPasswordInput.getError() == null) {
+                if (validator("First Name", firstNameInput, "^[A-Z][a-zA-Z]+$")
+                        && validator("Last Name", lastNameInput, "^[A-Z][a-zA-Z]+$")
+                        && validator("Email", emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$")
+                        && validator("Phone", phoneInput, "^\\+?[0-9]{10,16}$")
+                        && validator("Password", passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+                        && confirmPasswordValidator(passwordInput, confirmPasswordInput)) {
                     Toast.makeText(getApplicationContext(), "Congratulations", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    public void Validator(String field, EditText field_id, String regex) {
-        if (field_id.getText().toString().equals("")) {
-            field_id.setError(field + " cannot be empty.");
-        } else if (!(field_id.getText().toString().matches(regex))) {
-            field_id.setError("Invalid value of " + field);
+    public boolean validator(String fieldName, EditText fieldId, String regex) {
+        if (fieldId.getText().toString().equals("")) {
+            fieldId.setError(fieldName + " cannot be empty.");
+            return false;
+        } else if (!(fieldId.getText().toString().matches(regex))) {
+            fieldId.setError("Invalid value of " + fieldName);
+            return false;
         }
+        return true;
     }
 
-    public void ConfirmPasswordValidator(EditText password, EditText passwordConfirm) {
-        if (passwordConfirm.getText().toString().isEmpty()) {
+    public boolean confirmPasswordValidator(EditText password, EditText passwordConfirm) {
+        String passwordConfirmValue = passwordConfirm.getText().toString();
+        if (passwordConfirmValue.isEmpty()) {
             passwordConfirm.setError("Confirm passwordInput cannot be empty.");
-        } else if (!passwordConfirm.getText().toString().equals(password.getText().toString())) {
+            return false;
+        } else if (!passwordConfirmValue.equals(password.getText().toString())) {
             passwordConfirm.setError("Passwords do not match!");
+            return false;
         }
+        return true;
     }
 }

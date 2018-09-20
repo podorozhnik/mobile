@@ -1,11 +1,26 @@
 package com.lpnu.mobile;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     protected EditText firstNameInput;
@@ -15,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     protected EditText passwordInput;
     protected EditText confirmPasswordInput;
     protected Button submitButton;
+    protected Button showButton;
+
+    private ArrayList<User> userArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.password);
         confirmPasswordInput = findViewById(R.id.passwordConfirm);
         submitButton = findViewById(R.id.button);
+        showButton = findViewById(R.id.show_button);
         onClickButtonsHandler();
+        userArrayList = new ArrayList<>();
     }
 
     public void onClickButtonsHandler() {
@@ -42,9 +62,29 @@ public class MainActivity extends AppCompatActivity {
                         && validator("Password", passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
                         && confirmPasswordValidator(passwordInput, confirmPasswordInput)) {
                     Toast.makeText(getApplicationContext(), "Congratulations", Toast.LENGTH_SHORT).show();
+                    onSuccessRegister();
                 }
             }
         });
+    }
+
+    public void onSuccessRegister(){
+        User user = new User(lastNameInput.getText().toString(),
+                firstNameInput.getText().toString(),
+                phoneInput.getText().toString());
+        userArrayList.add(user);
+        Gson gson = new Gson();
+        String json = gson.toJson(userArrayList);
+        Log.i("Users", json);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UsersList", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("UsersList", json);
+        editor.apply();
+    }
+
+    public void showUsers(View view){
+        Intent myIntent = new Intent(getBaseContext(), DataActivity.class);
+        startActivity(myIntent);
     }
 
     public boolean validator(String fieldName, EditText fieldId, String regex) {

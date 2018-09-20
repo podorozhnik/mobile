@@ -8,59 +8,59 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    protected EditText first_name;
-    protected EditText last_name;
-    protected EditText email;
-    protected EditText phone;
-    protected EditText password;
-    protected EditText confirm_password;
-    protected Button submit_button;
+    protected EditText firstNameInput;
+    protected EditText lastNameInput;
+    protected EditText emailInput;
+    protected EditText phoneInput;
+    protected EditText passwordInput;
+    protected EditText confirmPasswordInput;
+    protected Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        first_name = findViewById(R.id.firstName);
-        last_name = findViewById(R.id.lastName);
-        email = findViewById(R.id.email);
-        phone = findViewById(R.id.phone);
-        password = findViewById(R.id.password);
-        confirm_password = findViewById(R.id.passwordConfirm);
-        submit_button = findViewById(R.id.button);
+        firstNameInput = findViewById(R.id.firstName);
+        lastNameInput = findViewById(R.id.lastName);
+        emailInput = findViewById(R.id.email);
+        phoneInput = findViewById(R.id.phone);
+        passwordInput = findViewById(R.id.password);
+        confirmPasswordInput = findViewById(R.id.passwordConfirm);
+        submitButton = findViewById(R.id.button);
         onClickButtonsHandler();
     }
 
     public void onClickButtonsHandler() {
-        submit_button.setOnClickListener(new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Validator(first_name.getText().toString(), "First Name", first_name, "^[A-Z][a-zA-Z]+$");
-                Validator(last_name.getText().toString(), "Last Name", last_name, "^[A-Z][a-zA-Z]+$");
-                Validator(email.getText().toString(), "Email", email, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$");
-                Validator(phone.getText().toString(), "Phone", phone, "^\\+?[0-9]{10,16}$");
-                Validator(password.getText().toString(), "Password", password, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
-                ConfirmPasswordValidator(confirm_password.getText().toString(), password.getText().toString(), confirm_password);
-                if (first_name.getError() == null && last_name.getError() == null && email.getError() == null && phone.getError() == null && password.getError() == null && confirm_password.getError() == null) {
+                Validator("First Name", firstNameInput, "^[A-Z][a-zA-Z]+$");
+                Validator("Last Name", lastNameInput, "^[A-Z][a-zA-Z]+$");
+                Validator("Email", emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$");
+                Validator("Phone", phoneInput, "^\\+?[0-9]{10,16}$");
+                Validator("Password", passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
+                ConfirmPasswordValidator(passwordInput, confirmPasswordInput);
+                if (firstNameInput.getError() == null && lastNameInput.getError() == null && emailInput.getError() == null && phoneInput.getError() == null && passwordInput.getError() == null && confirmPasswordInput.getError() == null) {
                     Toast.makeText(getApplicationContext(), "Congratulations", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    public void Validator(String value, String field, EditText field_id, String regex) {
-        if (value.equals("")) {
+    public void Validator(String field, EditText field_id, String regex) {
+        if (field_id.getText().toString().equals("")) {
             field_id.setError(field + " cannot be empty.");
-        } else if (!(value.matches(regex))) {
+        } else if (!(field_id.getText().toString().matches(regex))) {
             field_id.setError("Invalid value of " + field);
         }
     }
 
-    public void ConfirmPasswordValidator(String valueConfirmPassword, String valuePassword, EditText field_id) {
-        if (valueConfirmPassword.equals("")) {
-            field_id.setError("Confirm password cannot be empty.");
-        } else if (!valueConfirmPassword.equals(valuePassword)) {
-            field_id.setError("Passwords do not match!");
+    public void ConfirmPasswordValidator(EditText password, EditText passwordConfirm) {
+        if (passwordConfirm.getText().toString().isEmpty()) {
+            passwordConfirm.setError("Confirm passwordInput cannot be empty.");
+        } else if (!passwordConfirm.getText().toString().equals(password.getText().toString())) {
+            passwordConfirm.setError("Passwords do not match!");
         }
     }
 }

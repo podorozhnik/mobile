@@ -11,25 +11,30 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    protected Button helloButton;
+    protected Button clearButton;
+    protected EditText nameInput;
+    protected TextView label;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("Hello, world!");
+        helloButton = findViewById(R.id.button);
+        clearButton = findViewById(R.id.btn_clear);
+        nameInput = findViewById(R.id.editText);
+        label = findViewById(R.id.textView);
         onClickButtonsHandler();
+        onTextChangedHandler();
+        clearButtonHandler();
     }
 
-    public void onClickButtonsHandler(){
-        final Button helloButton = (Button) findViewById(R.id.button);
-        final Button btn_clear = (Button) findViewById(R.id.btn_clear);
-        final EditText nameInput = (EditText) findViewById(R.id.editText);
-        final TextView label = (TextView) findViewById(R.id.textView);
-
+    public void onClickButtonsHandler() {
         helloButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = nameInput.getText().toString();
-                if (name.matches("")) {
+                if (name.isEmpty()) {
                     label.setText("Please write your name.");
                 } else {
                     label.setText("Hello, " + name + "!");
@@ -37,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
                 label.setVisibility(View.VISIBLE);
             }
         });
+    }
 
+    public void onTextChangedHandler() {
         nameInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -47,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().trim().length() == 0) {
-                    btn_clear.setVisibility(View.INVISIBLE);
+                    clearButton.setVisibility(View.INVISIBLE);
                 } else {
-                    btn_clear.setVisibility(View.VISIBLE);
+                    clearButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -58,8 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        btn_clear.setOnClickListener(new View.OnClickListener() {
+    public void clearButtonHandler(){
+        clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 nameInput.setText("");

@@ -12,14 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,20 +48,26 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (validator(getString(R.string.first_name), firstNameInput, "^[A-Z][a-zA-Z]+$")
-                        && validator(getString(R.string.last_name), lastNameInput, "^[A-Z][a-zA-Z]+$")
-                        && validator(getString(R.string.email), emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$")
-                        && validator(getString(R.string.phone), phoneInput, "^\\+?[0-9]{10,16}$")
-                        && validator(getString(R.string.password), passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+                if (validator(getString(R.string.first_name), firstNameInput,
+                        "^[A-Z][a-zA-Z]+$")
+                        && validator(getString(R.string.last_name), lastNameInput,
+                        "^[A-Z][a-zA-Z]+$")
+                        && validator(getString(R.string.email), emailInput,
+                        "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$")
+                        && validator(getString(R.string.phone), phoneInput,
+                        "^\\+?[0-9]{10,16}$")
+                        && validator(getString(R.string.password), passwordInput,
+                        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
                         && confirmPasswordValidator(passwordInput, confirmPasswordInput)) {
-                    Toast.makeText(getApplicationContext(), "Congratulations", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Congratulations",
+                            Toast.LENGTH_SHORT).show();
                     onSuccessRegister();
                 }
             }
         });
     }
 
-    public void onSuccessRegister(){
+    public void onSuccessRegister() {
         User user = new User(lastNameInput.getText().toString(),
                 firstNameInput.getText().toString(),
                 phoneInput.getText().toString());
@@ -76,13 +75,14 @@ public class MainActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = gson.toJson(userArrayList);
         Log.i("Users", json);
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UsersList", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                "UsersList", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("UsersList", json);
         editor.apply();
     }
 
-    public void showUsers(View view){
+    public void showUsers(View view) {
         Intent myIntent = new Intent(getBaseContext(), DataActivity.class);
         startActivity(myIntent);
     }

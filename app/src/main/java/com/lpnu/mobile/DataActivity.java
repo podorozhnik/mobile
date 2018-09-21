@@ -26,7 +26,8 @@ public class DataActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         List<User> usersFromShared;
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UsersList", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                "UsersList", Context.MODE_PRIVATE);
         String jsonPreferences = sharedPref.getString("UsersList", "");
         Log.i("Users", jsonPreferences);
 

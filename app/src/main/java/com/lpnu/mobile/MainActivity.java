@@ -1,78 +1,72 @@
 package com.lpnu.mobile;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    protected Button helloButton;
-    protected Button clearButton;
-    protected EditText nameInput;
-    protected TextView label;
+    protected EditText firstNameInput;
+    protected EditText lastNameInput;
+    protected EditText emailInput;
+    protected EditText phoneInput;
+    protected EditText passwordInput;
+    protected EditText confirmPasswordInput;
+    protected Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        helloButton = findViewById(R.id.button);
-        clearButton = findViewById(R.id.btn_clear);
-        nameInput = findViewById(R.id.editText);
-        label = findViewById(R.id.textView);
+        firstNameInput = findViewById(R.id.firstName);
+        lastNameInput = findViewById(R.id.lastName);
+        emailInput = findViewById(R.id.email);
+        phoneInput = findViewById(R.id.phone);
+        passwordInput = findViewById(R.id.password);
+        confirmPasswordInput = findViewById(R.id.passwordConfirm);
+        submitButton = findViewById(R.id.button);
         onClickButtonsHandler();
-        onTextChangedHandler();
-        clearButtonHandler();
     }
 
     public void onClickButtonsHandler() {
-        helloButton.setOnClickListener(new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                String name = nameInput.getText().toString();
-                if (name.isEmpty()) {
-                    label.setText("Please write your name.");
-                } else {
-                    label.setText("Hello, " + name + "!");
+                if (validator(getString(R.string.first_name), firstNameInput, "^[A-Z][a-zA-Z]+$")
+                        && validator(getString(R.string.last_name), lastNameInput, "^[A-Z][a-zA-Z]+$")
+                        && validator(getString(R.string.email), emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$")
+                        && validator(getString(R.string.phone), phoneInput, "^\\+?[0-9]{10,16}$")
+                        && validator(getString(R.string.password), passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+                        && confirmPasswordValidator(passwordInput, confirmPasswordInput)) {
+                    Toast.makeText(getApplicationContext(), R.string.congratulations, Toast.LENGTH_SHORT).show();
                 }
-                label.setVisibility(View.VISIBLE);
             }
         });
     }
 
-    public void onTextChangedHandler() {
-        nameInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() == 0) {
-                    clearButton.setVisibility(View.INVISIBLE);
-                } else {
-                    clearButton.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+    public boolean validator(String fieldName, EditText fieldId, String regex) {
+        if (fieldId.getText().toString().equals("")) {
+            fieldId.setError(fieldName + getString(R.string.cannot_be_empty));
+            return false;
+        } else if (!(fieldId.getText().toString().matches(regex))) {
+            fieldId.setError(getString(R.string.invalid_value) + fieldName);
+            return false;
+        }
+        return true;
     }
 
-    public void clearButtonHandler(){
-        clearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nameInput.setText("");
-            }
-        });
+    public boolean confirmPasswordValidator(EditText password, EditText passwordConfirm) {
+        String passwordConfirmValue = passwordConfirm.getText().toString();
+        if (passwordConfirmValue.isEmpty()) {
+            passwordConfirm.setError(getString(R.string.empty_confirm_password));
+            return false;
+        } else if (!passwordConfirmValue.equals(password.getText().toString())) {
+            passwordConfirm.setError(getString(R.string.passwods_dont_match));
+            return false;
+        }
+        return true;
     }
 }

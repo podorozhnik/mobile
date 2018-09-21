@@ -55,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (validator("First Name", firstNameInput, "^[A-Z][a-zA-Z]+$")
-                        && validator("Last Name", lastNameInput, "^[A-Z][a-zA-Z]+$")
-                        && validator("Email", emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$")
-                        && validator("Phone", phoneInput, "^\\+?[0-9]{10,16}$")
-                        && validator("Password", passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+                if (validator(getString(R.string.first_name), firstNameInput, "^[A-Z][a-zA-Z]+$")
+                        && validator(getString(R.string.last_name), lastNameInput, "^[A-Z][a-zA-Z]+$")
+                        && validator(getString(R.string.email), emailInput, "^[a-zA-Z0-9+_.-]+@[a-zA-Z]+\\.[A-Za-z]{2,4}$")
+                        && validator(getString(R.string.phone), phoneInput, "^\\+?[0-9]{10,16}$")
+                        && validator(getString(R.string.password), passwordInput, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
                         && confirmPasswordValidator(passwordInput, confirmPasswordInput)) {
                     Toast.makeText(getApplicationContext(), "Congratulations", Toast.LENGTH_SHORT).show();
                     onSuccessRegister();
@@ -89,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean validator(String fieldName, EditText fieldId, String regex) {
         if (fieldId.getText().toString().equals("")) {
-            fieldId.setError(fieldName + " cannot be empty.");
+            fieldId.setError(fieldName + getString(R.string.cannot_be_empty));
             return false;
         } else if (!(fieldId.getText().toString().matches(regex))) {
-            fieldId.setError("Invalid value of " + fieldName);
+            fieldId.setError(getString(R.string.invalid_value) + fieldName);
             return false;
         }
         return true;
@@ -101,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean confirmPasswordValidator(EditText password, EditText passwordConfirm) {
         String passwordConfirmValue = passwordConfirm.getText().toString();
         if (passwordConfirmValue.isEmpty()) {
-            passwordConfirm.setError("Confirm passwordInput cannot be empty.");
+            passwordConfirm.setError(getString(R.string.empty_confirm_password));
             return false;
         } else if (!passwordConfirmValue.equals(password.getText().toString())) {
-            passwordConfirm.setError("Passwords do not match!");
+            passwordConfirm.setError(getString(R.string.passwods_dont_match));
             return false;
         }
         return true;

@@ -2,4 +2,14 @@
     <string name="app_name">mobile</string>
     <string name="input_your_name">Input your name</string>
     <string name="say_hello">Say hello</string>
+    <string name="passwods_dont_match">Passwords do not match!</string>
+    <string name="empty_confirm_password">Confirm password cannot be empty.</string>
+    <string name="invalid_value">Invalid value of</string>
+    <string name="cannot_be_empty">cannot be empty.</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="congratulations">Congratulations</string>
 </resources>

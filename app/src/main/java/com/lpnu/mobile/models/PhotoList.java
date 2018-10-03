@@ -29,10 +29,8 @@ public class PhotoList {
 
     @Override
     public String toString() {
-        return "PhotoList{" +
-                "totalHits='" + totalHits + '\'' +
-                ", total='" + total + '\'' +
-                ", hits=" + hits +
-                '}';
+        return "totalHits: " + totalHits +
+                "\ntotal: " + total +
+                "\nhits: " + hits;
     }
 }

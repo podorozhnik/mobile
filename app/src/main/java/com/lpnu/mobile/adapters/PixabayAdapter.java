@@ -1,0 +1,66 @@
+package com.lpnu.mobile.adapters;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.lpnu.mobile.MainActivity;
+import com.lpnu.mobile.R;
+import com.lpnu.mobile.models.Hit;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
+    ArrayList<Hit> photos;
+    public PixabayAdapter(ArrayList<Hit> photos) {
+        this .photos = photos;
+    }
+
+    @Override
+    public PixabayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
+        return new PixabayViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(PixabayViewHolder holder, int position) {
+        holder.tags.setText(photos.get(position).getTags());
+        holder.user.setText(photos.get(position).getUser());
+        Picasso.get().load(photos.get(position).getLargeImageURL()).into(holder.image);
+    }
+
+    @Override
+    public int getItemCount() {
+        return photos.size();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public class PixabayViewHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.cv) CardView cardView;
+        @BindView(R.id.tags) TextView tags;
+        @BindView(R.id.user) TextView user;
+        @BindView(R.id.image) ImageView image;
+        public PixabayViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+}

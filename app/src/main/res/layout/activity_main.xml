@@ -21,14 +21,16 @@
                 android:layout_height="wrap_content"
                 android:padding="100dp"
                 android:visibility="gone"
-                app:srcCompat="@drawable/no_data" />
+                app:srcCompat="@drawable/no_data"
+                android:contentDescription="@string/no_data" />
         </FrameLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_photos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+            android:scrollbars="vertical">
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

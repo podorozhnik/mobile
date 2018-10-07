@@ -1,8 +1,5 @@
 package com.lpnu.mobile.adapters;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,14 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;

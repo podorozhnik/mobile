@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
         Call<PhotoList> call = pixabayAPI.getData();
         call.enqueue(new Callback<PhotoList>() {
             @Override
-            public void onResponse(@NonNull Call<PhotoList> call, @NonNull Response<PhotoList> response) {
+            public void onResponse(@NonNull Call<PhotoList> call,
+                                   @NonNull Response<PhotoList> response) {
                 Log.d("onResponse", "ServerResponse: " + response.toString());
 
                 if (response.isSuccessful()){

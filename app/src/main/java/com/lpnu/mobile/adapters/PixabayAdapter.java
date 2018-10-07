@@ -53,6 +53,17 @@ public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.Pixabay
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    public void clear() {
+        photos.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(ArrayList<Hit> list) {
+        photos.addAll(list);
+        notifyDataSetChanged();
+    }
+
     public class PixabayViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.cv) CardView cardView;
         @BindView(R.id.tags) TextView tags;

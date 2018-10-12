@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.lpnu.mobile.adapters.PixabayAdapter;
 import com.lpnu.mobile.interfaces.PixabayAPI;
@@ -18,9 +17,11 @@ import com.lpnu.mobile.models.PhotoList;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.list_photos) RecyclerView recyclerView;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
-    @BindView(R.id.no_data) TextView noData;
+    @BindView(R.id.no_data) ImageView noData;
     private final static String BASE_URL = "https://pixabay.com/api/";
     PixabayAdapter adapter;
 
@@ -41,21 +42,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         callRetrofit();
-        // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refresh();
             }
         });
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(R.color.colorPrimaryDark);
 
     }
 
     public void callRetrofit(){
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(1, TimeUnit.SECONDS)
+                .readTimeout(1, TimeUnit.SECONDS)
+                .writeTimeout(1, TimeUnit.SECONDS)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -65,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<PhotoList> call,
                                    @NonNull Response<PhotoList> response) {
+                Log.d("tag", call.toString());
                 Log.d("onResponse", "ServerResponse: " + response.toString());
-
                 if (response.isSuccessful()){
                     noData.setVisibility(View.GONE);
                     PhotoList photoList = response.body();

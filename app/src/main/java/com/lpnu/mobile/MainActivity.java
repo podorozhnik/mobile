@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lpnu.mobile.adapters.PixabayAdapter;
 import com.lpnu.mobile.interfaces.PixabayAPI;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.list_photos) RecyclerView recyclerView;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
-    @BindView(R.id.imageView) ImageView noData;
+    @BindView(R.id.no_data) TextView noData;
     private final static String BASE_URL = "https://pixabay.com/api/";
     PixabayAdapter adapter;
 
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<PhotoList> call, @NonNull Throwable t) {
                 Log.e("onFailure", t.getMessage());
+                noData.setVisibility(View.VISIBLE);
             }
         });
     }

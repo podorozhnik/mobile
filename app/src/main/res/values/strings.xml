@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">mobile</string>
     <string name="no_data">No data</string>
+    <string name="favourites">Favourites</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.lpnu.mobile.adapters;
 
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
+import com.lpnu.mobile.fragments.Details;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
@@ -17,16 +21,26 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
-    ArrayList<Hit> photos;
-    public PixabayAdapter(ArrayList<Hit> photos) {
-        this .photos = photos;
-    }
+public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
+    private ArrayList<Hit> photos = new ArrayList<>();
 
     @Override
     public PixabayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
-        return new PixabayViewHolder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
+        PixabayViewHolder pixabayViewHolder = new PixabayViewHolder(view);
+        pixabayViewHolder.cardView.setOnClickListener(v -> {
+            FragmentTransaction ft = ((MainActivity) view.getContext())
+                    .getSupportFragmentManager()
+                    .beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            Details detailsFragment = new Details();
+            Bundle bundle = new Bundle();
+            Hit photo = photos.get(pixabayViewHolder.getAdapterPosition());
+            bundle.putSerializable("current_item", photo);
+            detailsFragment.setArguments(bundle);
+            ft.replace(R.id.main_container, detailsFragment).addToBackStack(null).commit();
+        });
+        return pixabayViewHolder;
     }
 
     @Override
@@ -51,7 +65,6 @@ public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.Pixabay
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(ArrayList<Hit> list) {
         photos.addAll(list);
         notifyDataSetChanged();

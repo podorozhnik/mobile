@@ -2,7 +2,9 @@ package com.lpnu.mobile.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Hit {
+import java.io.Serializable;
+
+public class Hit implements Serializable {
 
     @SerializedName("largeImageURL")
     private String largeImageURL;

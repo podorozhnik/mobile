@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
+import com.lpnu.mobile.Storage;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +40,10 @@ public class Details extends Fragment {
     protected TextView comments;
     @BindView(R.id.fav_button)
     protected ImageButton favButton;
+    @BindView(R.id.add_or_remove)
+    protected TextView addOrRemove;
+
+    private Storage storage = new Storage();
 
     public Details(){}
 
@@ -52,29 +57,35 @@ public class Details extends Fragment {
         Hit photo = (Hit) Objects.requireNonNull(bundle).getSerializable("current_item");
 
         if(photo != null){
-            visibleItem(photo);
+            visibleItem(photo, view);
 
             imageDetail.setOnClickListener(v -> {
                 MainActivity mainActivity = (MainActivity) view.getContext();
                 FragmentTransaction ft = mainActivity.getSupportFragmentManager().beginTransaction();
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
                 FullScreen fullScreen = new FullScreen();
-
                 bundle.putSerializable("link", photo.getLargeImageURL());
                 fullScreen.setArguments(bundle);
-
                 ft.replace(R.id.main_container, fullScreen).addToBackStack(null).commit();
-
             });
         }
 
-        // TODO: add favourite button functionality
+        favButton.setOnClickListener(v -> {
+            // if result == true object save, if result == false object delete
+            Boolean result = storage.saveOrRemove(photo, view);
+            if(result){
+                favButton.setImageResource(R.drawable.ic_fav_color);
+                addOrRemove.setText(R.string.remove_from_fav);
+            } else{
+                favButton.setImageResource(R.drawable.ic_fav_borders);
+                addOrRemove.setText(R.string.add_to_fav);
+            }
+        });
 
         return view;
     }
 
-    private void visibleItem(Hit photo){
+    private void visibleItem(Hit photo, View view){
         Picasso.get().load(photo.getLargeImageURL()).into(imageDetail);
         author.setText(photo.getUser());
         tags.setText(photo.getTags());
@@ -82,8 +93,14 @@ public class Details extends Fragment {
         downloads.setText(Objects.toString(photo.getDownloads()));
         favourites.setText(Objects.toString(photo.getFavorites()));
         comments.setText(Objects.toString(photo.getComments()));
-        
-        // TODO: fav button visible
+
+        if(storage.checkThatObjectAlreadySaved(photo, view)){
+            favButton.setImageResource(R.drawable.ic_fav_color);
+            addOrRemove.setText(R.string.remove_from_fav);
+        } else{
+            favButton.setImageResource(R.drawable.ic_fav_borders);
+            addOrRemove.setText(R.string.add_to_fav);
+        }
     }
 
     @Override

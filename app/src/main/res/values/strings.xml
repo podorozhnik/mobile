@@ -9,4 +9,5 @@
     <string name="views">Views</string>
     <string name="downloads">Downloads</string>
     <string name="comments">Comments</string>
+    <string name="remove_from_fav">Remove from favourites</string>
 </resources>

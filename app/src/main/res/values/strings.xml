@@ -2,4 +2,11 @@
     <string name="app_name">mobile</string>
     <string name="no_data">No data</string>
     <string name="favourites">Favourites</string>
+    <string name="add_to_fav">Add to favourites</string>
+    <string name="author">Author</string>
+    <string name="example">example</string>
+    <string name="tags">Tags</string>
+    <string name="views">Views</string>
+    <string name="downloads">Downloads</string>
+    <string name="comments">Comments</string>
 </resources>

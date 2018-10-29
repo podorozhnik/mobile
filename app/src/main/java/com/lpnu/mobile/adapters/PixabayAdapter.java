@@ -26,7 +26,8 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
 
     @Override
     public PixabayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item,
+                parent, false);
         final PixabayViewHolder pixabayViewHolder = new PixabayViewHolder(view);
         pixabayViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -15,7 +15,7 @@ import android.widget.ImageView;
 
 import com.lpnu.mobile.R;
 import com.lpnu.mobile.adapters.PixabayAdapter;
-import com.lpnu.mobile.controller.RetrofitController;
+import com.lpnu.mobile.controller.ApplicationController;
 import com.lpnu.mobile.models.Hit;
 import com.lpnu.mobile.models.PhotoList;
 
@@ -38,9 +38,10 @@ public class AllList extends Fragment {
 
     private PixabayAdapter adapter = new PixabayAdapter();
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.all_list, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -63,7 +64,7 @@ public class AllList extends Fragment {
     }
 
     private void loadData() {
-        RetrofitController retrofit = (RetrofitController) getActivity().getApplication();
+        ApplicationController retrofit = (ApplicationController) getActivity().getApplication();
         retrofit.getPixabayApi().getData().enqueue(new Callback<PhotoList>() {
             @Override
             public void onResponse(Call<PhotoList> call, Response<PhotoList> response) {

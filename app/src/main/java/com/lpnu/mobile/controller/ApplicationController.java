@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitController extends Application {
+public class ApplicationController extends Application {
 
     private PixabayAPI pixabayAPI;
 

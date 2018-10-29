@@ -42,31 +42,27 @@ public class Favourites  extends Fragment {
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        loadData();
         return view;
     }
 
     @Override
     public void onResume() {
+        super.onResume();
         adapter.clear();
         loadData();
-        super.onResume();
     }
 
     private void loadData(){
         Gson gson = new Gson();
         ArrayList<Hit> photos;
-
         MainActivity mainActivity = (MainActivity) recyclerView.getContext();
         SharedPreferences sharedPref = mainActivity.getApplicationContext().getSharedPreferences(
                 "fav_list", Context.MODE_PRIVATE);
         String jsonPreferences = sharedPref.getString("fav_list", "");
-        Log.i("fav", jsonPreferences);
 
-        if(!jsonPreferences.equals("")){
+        if(!jsonPreferences.equals("[]")){
             Type type = new TypeToken<List<Hit>>() {}.getType();
             photos = gson.fromJson(jsonPreferences, type);
-            Log.i("data", photos.toString());
             noData.setVisibility(View.INVISIBLE);
             adapter.addAll(photos);
         } else {

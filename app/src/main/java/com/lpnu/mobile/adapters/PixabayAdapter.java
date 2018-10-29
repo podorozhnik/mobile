@@ -26,19 +26,21 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
 
     @Override
     public PixabayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
-        PixabayViewHolder pixabayViewHolder = new PixabayViewHolder(view);
-        pixabayViewHolder.cardView.setOnClickListener(v -> {
-            FragmentTransaction ft = ((MainActivity) view.getContext())
-                    .getSupportFragmentManager()
-                    .beginTransaction();
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            Details detailsFragment = new Details();
-            Bundle bundle = new Bundle();
-            Hit photo = photos.get(pixabayViewHolder.getAdapterPosition());
-            bundle.putSerializable("current_item", photo);
-            detailsFragment.setArguments(bundle);
-            ft.replace(R.id.main_container, detailsFragment).addToBackStack(null).commit();
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
+        final PixabayViewHolder pixabayViewHolder = new PixabayViewHolder(view);
+        pixabayViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                FragmentTransaction ft = ((MainActivity) view.getContext())
+                        .getSupportFragmentManager()
+                        .beginTransaction();
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                Details detailsFragment = new Details();
+                Hit photo = photos.get(pixabayViewHolder.getAdapterPosition());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("item", photo);
+                detailsFragment.setArguments(bundle);
+                ft.replace(R.id.main_container, detailsFragment).addToBackStack(null).commit();
+            }
         });
         return pixabayViewHolder;
     }
@@ -75,7 +77,7 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
         @BindView(R.id.tags) TextView tags;
         @BindView(R.id.user) TextView user;
         @BindView(R.id.image) ImageView image;
-        public PixabayViewHolder(View itemView) {
+        PixabayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

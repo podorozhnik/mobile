@@ -16,16 +16,14 @@ public class RetrofitController extends Application {
 
     @Override
     public void onCreate() {
-        setPaxabayApi();
         super.onCreate();
+        setPaxabayApi();
     }
 
     public void setPaxabayApi(){
         String BASE_URL = "https://pixabay.com/api/";
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                .connectTimeout(1, TimeUnit.SECONDS)
-                .readTimeout(1, TimeUnit.SECONDS)
-                .writeTimeout(1, TimeUnit.SECONDS)
+                .connectTimeout(3, TimeUnit.SECONDS)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

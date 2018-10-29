@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        AllList listItemsFragment = new AllList();
-        setCurrentFragment(listItemsFragment);
+        AllList allItemsFragment = new AllList();
+        setCurrentFragment(allItemsFragment);
     }
 
     @Override

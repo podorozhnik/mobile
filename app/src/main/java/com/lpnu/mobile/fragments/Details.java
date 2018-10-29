@@ -1,6 +1,7 @@
 package com.lpnu.mobile.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -18,10 +19,12 @@ import com.lpnu.mobile.Storage;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class Details extends Fragment {
     @BindView(R.id.image_detail)
@@ -41,74 +44,76 @@ public class Details extends Fragment {
     @BindView(R.id.fav_button)
     protected ImageButton favButton;
     @BindView(R.id.add_or_remove)
-    protected TextView addOrRemove;
+    protected TextView addOrRemoveText;
 
-    private Storage storage = new Storage();
+    private Storage storage = Storage.getStorage();
+    private Bundle bundle;
+    private Hit photo;
+    private View view;
 
-    public Details(){}
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_details, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        view = inflater.inflate(R.layout.item_details, container, false);
         ButterKnife.bind(this, view);
-
-        Bundle bundle = getArguments();
-
-        Hit photo = (Hit) Objects.requireNonNull(bundle).getSerializable("current_item");
-
-        if(photo != null){
-            visibleItem(photo, view);
-
-            imageDetail.setOnClickListener(v -> {
-                MainActivity mainActivity = (MainActivity) view.getContext();
-                FragmentTransaction ft = mainActivity.getSupportFragmentManager().beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                FullScreen fullScreen = new FullScreen();
-                bundle.putSerializable("link", photo.getLargeImageURL());
-                fullScreen.setArguments(bundle);
-                ft.replace(R.id.main_container, fullScreen).addToBackStack(null).commit();
-            });
-        }
-
-        favButton.setOnClickListener(v -> {
-            // if result == true object save, if result == false object delete
-            Boolean result = storage.saveOrRemove(photo, view);
-            if(result){
-                favButton.setImageResource(R.drawable.ic_fav_color);
-                addOrRemove.setText(R.string.remove_from_fav);
-            } else{
-                favButton.setImageResource(R.drawable.ic_fav_borders);
-                addOrRemove.setText(R.string.add_to_fav);
-            }
-        });
-
+        bundle = getArguments();
+        photo = (Hit) bundle.getSerializable("item");
         return view;
-    }
-
-    private void visibleItem(Hit photo, View view){
-        Picasso.get().load(photo.getLargeImageURL()).into(imageDetail);
-        author.setText(photo.getUser());
-        tags.setText(photo.getTags());
-        views.setText(Objects.toString(photo.getViews()));
-        downloads.setText(Objects.toString(photo.getDownloads()));
-        favourites.setText(Objects.toString(photo.getFavorites()));
-        comments.setText(Objects.toString(photo.getComments()));
-
-        if(storage.checkThatObjectAlreadySaved(photo, view)){
-            favButton.setImageResource(R.drawable.ic_fav_color);
-            addOrRemove.setText(R.string.remove_from_fav);
-        } else{
-            favButton.setImageResource(R.drawable.ic_fav_borders);
-            addOrRemove.setText(R.string.add_to_fav);
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        showItem(view);
         ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.show();
+        }
+    }
+
+    private void showItem(View view){
+        if(photo != null) {
+            Picasso.get().load(photo.getLargeImageURL()).into(imageDetail);
+            author.setText(photo.getUser());
+            tags.setText(photo.getTags());
+            views.setText(Objects.toString(photo.getViews()));
+            downloads.setText(Objects.toString(photo.getDownloads()));
+            favourites.setText(Objects.toString(photo.getFavorites()));
+            comments.setText(Objects.toString(photo.getComments()));
+            if(storage.isFavourite(photo, view)){
+                favButton.setImageResource(R.drawable.ic_fav_color);
+                addOrRemoveText.setText(R.string.remove_from_fav);
+            } else{
+                favButton.setImageResource(R.drawable.ic_fav_borders);
+                addOrRemoveText.setText(R.string.add_to_fav);
+            }
+        }
+    }
+
+    @OnClick(R.id.image_detail)
+    void openImage(View v) {
+        MainActivity mainActivity = (MainActivity) v.getContext();
+        FragmentTransaction ft = mainActivity.getSupportFragmentManager()
+                .beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        FullScreen fullScreen = new FullScreen();
+        bundle.putSerializable("link", photo.getLargeImageURL());
+        fullScreen.setArguments(bundle);
+        ft.replace(R.id.main_container, fullScreen).addToBackStack(null).commit();
+    }
+
+    @OnClick(R.id.fav_button)
+    void saveFavourites(View v) {
+        if (storage.isFavourite(photo, v)) {
+            storage.removeFromFavourites(photo, view);
+            favButton.setImageResource(R.drawable.ic_fav_borders);
+            addOrRemoveText.setText(R.string.add_to_fav);
+        } else {
+            storage.addToFavourites(photo, view);
+            favButton.setImageResource(R.drawable.ic_fav_color);
+            addOrRemoveText.setText(R.string.remove_from_fav);
         }
     }
 }

@@ -38,30 +38,35 @@ public class AllList extends Fragment {
 
     private PixabayAdapter adapter = new PixabayAdapter();
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.all_list, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        loadData();
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            noData.setVisibility(View.VISIBLE);
-            refresh();
-        });
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         return view;
     }
 
-    private void loadData() {
-        RetrofitController retrofit = (RetrofitController) Objects.requireNonNull(getActivity()).getApplication();
-        retrofit.getPixabayApi().getData().enqueue(new Callback<PhotoList>() {
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onResponse(@NonNull Call<PhotoList> call,
-                                   @NonNull Response<PhotoList> response) {
+            public void onRefresh() {
+                noData.setVisibility(View.VISIBLE);
+                refresh();
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+    }
+
+    private void loadData() {
+        RetrofitController retrofit = (RetrofitController) getActivity().getApplication();
+        retrofit.getPixabayApi().getData().enqueue(new Callback<PhotoList>() {
+            @Override
+            public void onResponse(Call<PhotoList> call, Response<PhotoList> response) {
                 Log.d("tag", call.toString());
                 Log.d("onResponse", "ServerResponse: " + response.toString());
                 if (response.isSuccessful()){
@@ -70,7 +75,6 @@ public class AllList extends Fragment {
                     ArrayList<Hit> hits = Objects.requireNonNull(photoList).getHits();
                     displayData(hits);
                 } else {
-                    Log.i("data", "no data");
                     noData.setVisibility(View.VISIBLE);
                 }
             }

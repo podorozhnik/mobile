@@ -7,11 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lpnu.mobile.MainActivity;
@@ -46,6 +49,8 @@ public class Details extends Fragment {
     protected ImageButton favButton;
     @BindView(R.id.add_or_remove)
     protected TextView addOrRemoveText;
+    @BindView(R.id.loadingPanel)
+    protected RelativeLayout progressBar;
 
     private Storage storage = Storage.getStorage();
     private Bundle bundle;
@@ -76,7 +81,19 @@ public class Details extends Fragment {
 
     private void showItem(View view){
         if(photo != null) {
-            Picasso.get().load(photo.getLargeImageURL()).into(imageDetail);
+            Picasso.get().load(photo.getLargeImageURL())
+                    .into(imageDetail, new com.squareup.picasso.Callback() {
+
+                        @Override
+                        public void onSuccess() {
+                            progressBar.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.e("picasso", "Failed to load image");
+                        }
+                    });
             author.setText(photo.getUser());
             tags.setText(photo.getTags());
             views.setText(Objects.toString(photo.getViews()));

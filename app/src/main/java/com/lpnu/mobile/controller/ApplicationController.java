@@ -13,15 +13,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApplicationController extends Application {
 
     private PixabayAPI pixabayAPI;
+    private static final String BASE_URL = "https://pixabay.com/api/";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        setPaxabayApi();
-    }
-
-    public void setPaxabayApi(){
-        String BASE_URL = "https://pixabay.com/api/";
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(3, TimeUnit.SECONDS)
                 .build();

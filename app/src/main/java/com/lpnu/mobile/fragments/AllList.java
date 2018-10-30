@@ -68,12 +68,10 @@ public class AllList extends Fragment {
         retrofit.getPixabayApi().getData().enqueue(new Callback<PhotoList>() {
             @Override
             public void onResponse(Call<PhotoList> call, Response<PhotoList> response) {
-                Log.d("tag", call.toString());
                 Log.d("onResponse", "ServerResponse: " + response.toString());
                 if (response.isSuccessful()){
                     noData.setVisibility(View.GONE);
-                    PhotoList photoList = response.body();
-                    ArrayList<Hit> hits = Objects.requireNonNull(photoList).getHits();
+                    ArrayList<Hit> hits = Objects.requireNonNull(response.body()).getHits();
                     displayData(hits);
                 } else {
                     noData.setVisibility(View.VISIBLE);

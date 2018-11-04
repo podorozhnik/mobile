@@ -71,7 +71,16 @@ public class Details extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        loadImage();
         showItem();
+        if(storage.isFavourite(photo)){
+            favButton.setImageResource(R.drawable.ic_fav_color);
+            addOrRemoveText.setText(R.string.remove_from_fav);
+        } else{
+            favButton.setImageResource(R.drawable.ic_fav_borders);
+            addOrRemoveText.setText(R.string.add_to_fav);
+        }
+
         ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.show();
@@ -79,34 +88,27 @@ public class Details extends Fragment {
     }
 
     private void showItem(){
-        if(photo != null) {
-            Picasso.get().load(photo.getLargeImageURL())
-                    .into(imageDetail, new com.squareup.picasso.Callback() {
+        author.setText(photo.getUser());
+        tags.setText(photo.getTags());
+        views.setText(Objects.toString(photo.getViews()));
+        downloads.setText(Objects.toString(photo.getDownloads()));
+        favourites.setText(Objects.toString(photo.getFavorites()));
+        comments.setText(Objects.toString(photo.getComments()));
+    }
 
-                        @Override
-                        public void onSuccess() {
-                            progressBar.setVisibility(View.GONE);
-                        }
+    private void loadImage(){
+        Picasso.get().load(photo.getLargeImageURL())
+                .into(imageDetail, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-                        @Override
-                        public void onError(Exception e) {
-                            Log.e("picasso", "Failed to load image");
-                        }
-                    });
-            author.setText(photo.getUser());
-            tags.setText(photo.getTags());
-            views.setText(Objects.toString(photo.getViews()));
-            downloads.setText(Objects.toString(photo.getDownloads()));
-            favourites.setText(Objects.toString(photo.getFavorites()));
-            comments.setText(Objects.toString(photo.getComments()));
-            if(storage.isFavourite(photo)){
-                favButton.setImageResource(R.drawable.ic_fav_color);
-                addOrRemoveText.setText(R.string.remove_from_fav);
-            } else{
-                favButton.setImageResource(R.drawable.ic_fav_borders);
-                addOrRemoveText.setText(R.string.add_to_fav);
-            }
-        }
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("picasso", "Failed to load image");
+                    }
+                });
     }
 
     @OnClick(R.id.image_detail)

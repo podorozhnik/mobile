@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
 import com.lpnu.mobile.Storage;
+import com.lpnu.mobile.controller.ApplicationController;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
@@ -49,18 +50,19 @@ public class Details extends Fragment {
     @BindView(R.id.loadingPanel)
     protected RelativeLayout progressBar;
 
-    private Storage storage = Storage.getStorage();
+    private Storage storage;
     private Bundle bundle;
     private Hit photo;
-    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        view = inflater.inflate(R.layout.item_details, container, false);
+        View view = inflater.inflate(R.layout.item_details, container, false);
         ButterKnife.bind(this, view);
+        storage = ((ApplicationController) getActivity().getApplication())
+                .getStorage(view.getContext());
         bundle = getArguments();
         photo = (Hit) bundle.getSerializable("item");
         return view;
@@ -97,7 +99,7 @@ public class Details extends Fragment {
             downloads.setText(Objects.toString(photo.getDownloads()));
             favourites.setText(Objects.toString(photo.getFavorites()));
             comments.setText(Objects.toString(photo.getComments()));
-            if(storage.isFavourite(photo, view)){
+            if(storage.isFavourite(photo)){
                 favButton.setImageResource(R.drawable.ic_fav_color);
                 addOrRemoveText.setText(R.string.remove_from_fav);
             } else{
@@ -116,13 +118,13 @@ public class Details extends Fragment {
     }
 
     @OnClick(R.id.fav_button)
-    void saveFavourites(View v) {
-        if (storage.isFavourite(photo, v)) {
-            storage.removeFromFavourites(photo, view);
+    void saveFavourites() {
+        if (storage.isFavourite(photo)) {
+            storage.removeFromFavourites(photo);
             favButton.setImageResource(R.drawable.ic_fav_borders);
             addOrRemoveText.setText(R.string.add_to_fav);
         } else {
-            storage.addToFavourites(photo, view);
+            storage.addToFavourites(photo);
             favButton.setImageResource(R.drawable.ic_fav_color);
             addOrRemoveText.setText(R.string.remove_from_fav);
         }

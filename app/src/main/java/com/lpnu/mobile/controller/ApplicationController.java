@@ -1,7 +1,9 @@
 package com.lpnu.mobile.controller;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.lpnu.mobile.Storage;
 import com.lpnu.mobile.interfaces.PixabayAPI;
 
 import java.util.concurrent.TimeUnit;
@@ -31,5 +33,9 @@ public class ApplicationController extends Application {
 
     public PixabayAPI getPixabayApi() {
         return pixabayAPI;
+    }
+
+    public Storage getStorage(Context context){
+        return new Storage(context);
     }
 }

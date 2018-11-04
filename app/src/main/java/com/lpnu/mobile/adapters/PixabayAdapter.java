@@ -1,5 +1,6 @@
 package com.lpnu.mobile.adapters;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -23,6 +24,11 @@ import butterknife.ButterKnife;
 
 public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
     private ArrayList<Hit> photos = new ArrayList<>();
+    private Context context;
+
+    public PixabayAdapter(Context context) {
+        this.context = context;
+    }
 
     @Override
     public PixabayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -31,16 +37,12 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
         final PixabayViewHolder pixabayViewHolder = new PixabayViewHolder(view);
         pixabayViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                FragmentTransaction ft = ((MainActivity) view.getContext())
-                        .getSupportFragmentManager()
-                        .beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 Details detailsFragment = new Details();
                 Hit photo = photos.get(pixabayViewHolder.getAdapterPosition());
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("item", photo);
                 detailsFragment.setArguments(bundle);
-                ft.replace(R.id.main_container, detailsFragment).addToBackStack(null).commit();
+                ((MainActivity)context).setCurrentFragment(detailsFragment);
             }
         });
         return pixabayViewHolder;

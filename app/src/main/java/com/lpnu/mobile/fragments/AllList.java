@@ -36,7 +36,7 @@ public class AllList extends Fragment {
     @BindView(R.id.swipeContainer)
     protected SwipeRefreshLayout swipeRefreshLayout;
 
-    private PixabayAdapter adapter = new PixabayAdapter();
+    private PixabayAdapter adapter;
 
     @Nullable
     @Override
@@ -44,6 +44,7 @@ public class AllList extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.all_list, container, false);
         ButterKnife.bind(this, view);
+        adapter = new PixabayAdapter(view.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         return view;

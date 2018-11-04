@@ -14,6 +14,7 @@ import java.util.List;
 
 public class Storage {
     private Gson gson = new Gson();
+    private final static String TAG = "fav_list";
 
     private Storage() {}
 
@@ -34,8 +35,8 @@ public class Storage {
 
     public void removeFromFavourites(Hit photo, View view) {
         SharedPreferences sharedPref = view.getContext().getApplicationContext()
-                .getSharedPreferences("fav_list", Context.MODE_PRIVATE);
-        String jsonPreferences = sharedPref.getString("fav_list", "");
+                .getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        String jsonPreferences = sharedPref.getString(TAG, "");
         if (!jsonPreferences.equals("")) {
             ArrayList<Hit> favouritesList;
             Type type = new TypeToken<List<Hit>>() {}.getType();
@@ -47,8 +48,8 @@ public class Storage {
 
     private ArrayList<Hit> getFavourites(View view) {
         SharedPreferences sharedPref = view.getContext().getApplicationContext()
-                .getSharedPreferences("fav_list", Context.MODE_PRIVATE);
-        String jsonPreferences = sharedPref.getString("fav_list", "");
+                .getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        String jsonPreferences = sharedPref.getString(TAG, "");
         Type type = new TypeToken<List<Hit>>() {}.getType();
         ArrayList<Hit> photos = gson.fromJson(jsonPreferences, type);
         if (photos == null){
@@ -60,9 +61,9 @@ public class Storage {
     private void saveFavouritesList(ArrayList<Hit> photos, View view) {
         String json = gson.toJson(photos);
         SharedPreferences sharedPreferences = view.getContext().getApplicationContext()
-                .getSharedPreferences("fav_list", Context.MODE_PRIVATE);
+                .getSharedPreferences(TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("fav_list", json);
+        editor.putString(TAG, json);
         editor.apply();
     }
 }

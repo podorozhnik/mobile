@@ -2,6 +2,7 @@ package com.lpnu.mobile;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,14 +13,17 @@ import com.lpnu.mobile.fragments.Favourites;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    private boolean init;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        init = true;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         AllList allItemsFragment = new AllList();
         setCurrentFragment(allItemsFragment);
+        init = false;
     }
 
     @Override
@@ -33,10 +37,12 @@ public class MainActivity extends AppCompatActivity {
         setCurrentFragment(favouritesItemsFragment);
     }
 
-    private void setCurrentFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .addToBackStack(null)
-                .commit();
+    public void setCurrentFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, fragment);
+        if(!init){
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
     }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,7 +21,6 @@ import com.lpnu.mobile.Storage;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -72,14 +69,14 @@ public class Details extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        showItem(view);
+        showItem();
         ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (mActionBar != null) {
             mActionBar.show();
         }
     }
 
-    private void showItem(View view){
+    private void showItem(){
         if(photo != null) {
             Picasso.get().load(photo.getLargeImageURL())
                     .into(imageDetail, new com.squareup.picasso.Callback() {
@@ -111,15 +108,11 @@ public class Details extends Fragment {
     }
 
     @OnClick(R.id.image_detail)
-    void openImage(View v) {
-        MainActivity mainActivity = (MainActivity) v.getContext();
-        FragmentTransaction ft = mainActivity.getSupportFragmentManager()
-                .beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    void openImage() {
         FullScreen fullScreen = new FullScreen();
         bundle.putSerializable("link", photo.getLargeImageURL());
         fullScreen.setArguments(bundle);
-        ft.replace(R.id.main_container, fullScreen).addToBackStack(null).commit();
+        ((MainActivity)getActivity()).setCurrentFragment(fullScreen);
     }
 
     @OnClick(R.id.fav_button)

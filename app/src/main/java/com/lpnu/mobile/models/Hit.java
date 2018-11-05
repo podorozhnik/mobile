@@ -2,7 +2,10 @@ package com.lpnu.mobile.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Hit {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Hit implements Serializable {
 
     @SerializedName("largeImageURL")
     private String largeImageURL;
@@ -182,5 +185,18 @@ public class Hit {
                 "\npreviewWidth: " + previewWidth +
                 "\nuserImageURL: " + userImageURL +
                 "\npreviewURL: " + previewURL;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hit hit = (Hit) o;
+        return id == hit.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

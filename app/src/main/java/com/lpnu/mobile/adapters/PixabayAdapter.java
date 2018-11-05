@@ -1,5 +1,8 @@
 package com.lpnu.mobile.adapters;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
+import com.lpnu.mobile.fragments.Details;
 import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
@@ -17,16 +22,30 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
-    ArrayList<Hit> photos;
-    public PixabayAdapter(ArrayList<Hit> photos) {
-        this .photos = photos;
+public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
+    private ArrayList<Hit> photos = new ArrayList<>();
+    private Context context;
+
+    public PixabayAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
     public PixabayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item, parent, false);
-        return new PixabayViewHolder(v);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_list_item,
+                parent, false);
+        final PixabayViewHolder pixabayViewHolder = new PixabayViewHolder(view);
+        pixabayViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Details detailsFragment = new Details();
+                Hit photo = photos.get(pixabayViewHolder.getAdapterPosition());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("item", photo);
+                detailsFragment.setArguments(bundle);
+                ((MainActivity)context).setCurrentFragment(detailsFragment);
+            }
+        });
+        return pixabayViewHolder;
     }
 
     @Override
@@ -51,7 +70,6 @@ public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.Pixabay
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(ArrayList<Hit> list) {
         photos.addAll(list);
         notifyDataSetChanged();
@@ -62,7 +80,7 @@ public class PixabayAdapter  extends RecyclerView.Adapter<PixabayAdapter.Pixabay
         @BindView(R.id.tags) TextView tags;
         @BindView(R.id.user) TextView user;
         @BindView(R.id.image) ImageView image;
-        public PixabayViewHolder(View itemView) {
+        PixabayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

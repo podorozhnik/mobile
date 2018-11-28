@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
         init = false;
     }
 
-    check lint work #2;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.fav_button, menu);

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setCurrentFragment(allItemsFragment);
         init = false;
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.fav_button, menu);

@@ -31,4 +31,5 @@ android:
 
 script:
  - chmod +x gradlew
- - ./gradlew lint
+ - ./gradlew build check --stacktrace
+ - ./gradlew assembleDebug

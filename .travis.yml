@@ -31,3 +31,4 @@ android:
 
 script:
  - chmod +x gradlew
+ - ./gradlew clean assembleDebug test lint

@@ -32,6 +32,7 @@ android:
     - extra-android-support
     - extra-android-m2repository
     - addon-google_apis-google-26
+
 before_script:
   # Prepare pre-accepted licenses to not be promted at installation
   - echo yes | sdkmanager "build-tools;27.0.3"
@@ -42,3 +43,13 @@ script:
  - chmod +x gradlew
  - ./gradlew build check --stacktrace
  - ./gradlew clean assembleDebug test lint
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "f87e53306bf923618924c0845c082159a75ec16e"
+  file: "/app/build/outputs/apk/debug/app-debug.apk"
+  skip_cleanup: true
+  on:
+    tags: false
+    all_branches: true

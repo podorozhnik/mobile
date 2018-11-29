@@ -54,4 +54,5 @@ deploy:
   file_glob: true
   on:
     tags: false
+    rvm: 2.0.0
     all_branches: true

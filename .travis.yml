@@ -47,15 +47,10 @@ script:
 
 deploy:
   provider: releases
-
   api_key:
     secure: ${API_KEY}
-
   file: "app/build/outputs/apk/debug/app-debug.apk"
-
   skip_cleanup: true
-
   on:
-    repo: podorozhnik/mobile
-    tags: true
+    tags: false
     all_branches: true

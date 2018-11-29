@@ -57,5 +57,5 @@ deploy:
 
   on:
     repo: podorozhnik/mobile
-    tags: false
+    tags: true
     all_branches: true

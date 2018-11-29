@@ -58,5 +58,4 @@ deploy:
   on:
     repo: podorozhnik/mobile
     tags: false
-    rvm: 2.0.0
     all_branches: true

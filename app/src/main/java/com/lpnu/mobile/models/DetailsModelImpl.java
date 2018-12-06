@@ -25,4 +25,11 @@ public class DetailsModelImpl implements DetailsModel {
             result.onAdd();
         }
     }
+
+    @Override
+    public Boolean isFavourites(Hit hit) {
+        Storage storage = ((ApplicationController) mContext).getStorage(mContext);
+        return storage.isFavourite(hit);
+    }
+
 }

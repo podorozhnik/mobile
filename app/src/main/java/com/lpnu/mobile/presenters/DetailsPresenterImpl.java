@@ -15,11 +15,6 @@ public class DetailsPresenterImpl implements DetailsPresenter {
     }
 
     @Override
-    public void onCreate() {
-
-    }
-
-    @Override
     public void actionFavourite(Hit hit) {
         mModel.addToSharedPref(hit, new DetailsModel.Result() {
             @Override
@@ -32,5 +27,10 @@ public class DetailsPresenterImpl implements DetailsPresenter {
                 mView.onRemove();
             }
         });
+    }
+
+    @Override
+    public Boolean checkFavourites(Hit hit) {
+        return mModel.isFavourites(hit);
     }
 }

@@ -55,7 +55,6 @@ public class Details extends Fragment implements DetailsView {
     @BindView(R.id.loadingPanel)
     protected RelativeLayout progressBar;
 
-    private Storage storage;
     private Bundle bundle;
     private Hit photo;
     private DetailsPresenter mPresenter;
@@ -67,8 +66,6 @@ public class Details extends Fragment implements DetailsView {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.item_details, container, false);
         ButterKnife.bind(this, view);
-        storage = ((ApplicationController) getActivity().getApplication())
-                .getStorage(view.getContext());
         bundle = getArguments();
         photo = (Hit) bundle.getSerializable("item");
         createPresenter();
@@ -80,7 +77,7 @@ public class Details extends Fragment implements DetailsView {
         super.onResume();
         loadImage();
         showItem();
-        if(storage.isFavourite(photo)){
+        if(mPresenter.checkFavourites(photo)){
             favButton.setImageResource(R.drawable.ic_fav_color);
             addOrRemoveText.setText(R.string.remove_from_fav);
         } else{
@@ -128,24 +125,7 @@ public class Details extends Fragment implements DetailsView {
 
     @OnClick(R.id.fav_button)
     void saveFavourites() {
-//        if (storage.isFavourite(photo)) {
-//            storage.removeFromFavourites(photo);
-//
-//        } else {
-//            storage.addToFavourites(photo);
-//
-//        }
         mPresenter.actionFavourite(photo);
-    }
-
-    @Override
-    public void displayData(Hit hit) {
-
-    }
-
-    @Override
-    public void showError(Throwable throwable) {
-
     }
 
     @Override

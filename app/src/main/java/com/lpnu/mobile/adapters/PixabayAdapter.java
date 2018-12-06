@@ -42,7 +42,7 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("item", photo);
                 detailsFragment.setArguments(bundle);
-                ((MainActivity)context).setCurrentFragment(detailsFragment);
+                ((MainActivity)context).setCurrentFragment(detailsFragment, false);
             }
         });
         return pixabayViewHolder;

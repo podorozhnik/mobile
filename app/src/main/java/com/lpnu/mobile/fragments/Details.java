@@ -120,7 +120,7 @@ public class Details extends Fragment implements DetailsView {
         FullScreen fullScreen = new FullScreen();
         bundle.putSerializable("link", photo.getLargeImageURL());
         fullScreen.setArguments(bundle);
-        ((MainActivity)getActivity()).setCurrentFragment(fullScreen);
+        ((MainActivity)getActivity()).setCurrentFragment(fullScreen, false);
     }
 
     @OnClick(R.id.fav_button)

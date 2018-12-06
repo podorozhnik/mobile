@@ -7,28 +7,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.lpnu.mobile.R;
 import com.lpnu.mobile.adapters.PixabayAdapter;
-import com.lpnu.mobile.controller.ApplicationController;
-import com.lpnu.mobile.models.Hit;
-import com.lpnu.mobile.models.PhotoList;
+import com.lpnu.mobile.entities.Hit;
+import com.lpnu.mobile.models.AllListModel;
+import com.lpnu.mobile.models.AllListModelImpl;
+import com.lpnu.mobile.presenters.AllListPresenter;
+import com.lpnu.mobile.presenters.AllListPresenterImpl;
+import com.lpnu.mobile.views.AllListView;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class AllList extends Fragment {
+public class AllList extends Fragment implements AllListView {
     @BindView(R.id.list_photos)
     protected RecyclerView recyclerView;
     @BindView(R.id.no_data)
@@ -37,6 +36,7 @@ public class AllList extends Fragment {
     protected SwipeRefreshLayout swipeRefreshLayout;
 
     private PixabayAdapter adapter;
+    private AllListPresenter mPresenter;
 
     @Nullable
     @Override
@@ -47,54 +47,44 @@ public class AllList extends Fragment {
         adapter = new PixabayAdapter(view.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        createPresenter();
+        mPresenter.onCreate();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadData();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 noData.setVisibility(View.VISIBLE);
-                refresh();
             }
         });
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
     }
 
-    private void loadData() {
-        ApplicationController retrofit = (ApplicationController) getActivity().getApplication();
-        retrofit.getPixabayApi().getData().enqueue(new Callback<PhotoList>() {
-            @Override
-            public void onResponse(Call<PhotoList> call, Response<PhotoList> response) {
-                Log.d("onResponse", "ServerResponse: " + response.toString());
-                if (response.isSuccessful()){
-                    noData.setVisibility(View.GONE);
-                    ArrayList<Hit> hits = Objects.requireNonNull(response.body()).getHits();
-                    displayData(hits);
-                } else {
-                    noData.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<PhotoList> call, @NonNull Throwable t) {
-                Log.e("onFailure", t.getMessage());
-                noData.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    private void displayData(ArrayList<Hit> photos) {
+    @Override
+    public void displayList(List<Hit> hitList) {
         adapter.clear();
-        adapter.addAll(photos);
-    }
-
-    public void refresh() {
-        adapter.clear();
-        loadData();
+        adapter.addAll(hitList);
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void refreshData(List<Hit> hitList) {
+        mPresenter.onUpdateData();
+        adapter.clear();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showLoadingError(Throwable throwable) {
+        Toast.makeText(getContext(), "Loading failed!" + throwable, Toast.LENGTH_SHORT).show();
+    }
+
+    private void createPresenter() {
+        AllListModel model = new AllListModelImpl(getActivity().getApplication());
+        mPresenter = new AllListPresenterImpl(this, model);
     }
 }

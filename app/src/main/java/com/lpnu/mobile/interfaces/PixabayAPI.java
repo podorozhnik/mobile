@@ -1,6 +1,6 @@
 package com.lpnu.mobile.interfaces;
 
-import com.lpnu.mobile.models.PhotoList;
+import com.lpnu.mobile.entities.PhotoList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

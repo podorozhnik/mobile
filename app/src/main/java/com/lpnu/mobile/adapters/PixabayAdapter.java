@@ -2,7 +2,6 @@ package com.lpnu.mobile.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,17 +12,18 @@ import android.widget.TextView;
 
 import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
+import com.lpnu.mobile.entities.Hit;
 import com.lpnu.mobile.fragments.Details;
-import com.lpnu.mobile.models.Hit;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayViewHolder> {
-    private ArrayList<Hit> photos = new ArrayList<>();
+    private List<Hit> photos = new ArrayList<>();
     private Context context;
 
     public PixabayAdapter(Context context) {
@@ -42,7 +42,7 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("item", photo);
                 detailsFragment.setArguments(bundle);
-                ((MainActivity)context).setCurrentFragment(detailsFragment);
+                ((MainActivity)context).setCurrentFragment(detailsFragment, false);
             }
         });
         return pixabayViewHolder;
@@ -70,7 +70,7 @@ public class PixabayAdapter extends RecyclerView.Adapter<PixabayAdapter.PixabayV
         notifyDataSetChanged();
     }
 
-    public void addAll(ArrayList<Hit> list) {
+    public void addAll(List<Hit> list) {
         photos.addAll(list);
         notifyDataSetChanged();
     }

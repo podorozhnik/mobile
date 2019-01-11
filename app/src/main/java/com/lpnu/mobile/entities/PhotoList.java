@@ -1,4 +1,4 @@
-package com.lpnu.mobile.models;
+package com.lpnu.mobile.entities;
 
 import com.google.gson.annotations.SerializedName;
 

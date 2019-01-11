@@ -13,17 +13,14 @@ import com.lpnu.mobile.fragments.Favourites;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    private boolean init;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init = true;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         AllList allItemsFragment = new AllList();
-        setCurrentFragment(allItemsFragment);
-        init = false;
+        setCurrentFragment(allItemsFragment, true);
     }
 
     @Override
@@ -34,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void favoritesListDisplay(MenuItem item) {
         Favourites favouritesItemsFragment = new Favourites();
-        setCurrentFragment(favouritesItemsFragment);
+        setCurrentFragment(favouritesItemsFragment, false);
     }
 
-    public void setCurrentFragment(Fragment fragment) {
+    public void setCurrentFragment(Fragment fragment, Boolean init) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, fragment);
         if(!init){

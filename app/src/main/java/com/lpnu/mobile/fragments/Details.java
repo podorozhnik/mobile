@@ -19,7 +19,12 @@ import com.lpnu.mobile.MainActivity;
 import com.lpnu.mobile.R;
 import com.lpnu.mobile.Storage;
 import com.lpnu.mobile.controller.ApplicationController;
-import com.lpnu.mobile.models.Hit;
+import com.lpnu.mobile.entities.Hit;
+import com.lpnu.mobile.models.DetailsModel;
+import com.lpnu.mobile.models.DetailsModelImpl;
+import com.lpnu.mobile.presenters.DetailsPresenter;
+import com.lpnu.mobile.presenters.DetailsPresenterImpl;
+import com.lpnu.mobile.views.DetailsView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -28,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class Details extends Fragment {
+public class Details extends Fragment implements DetailsView {
     @BindView(R.id.image_detail)
     protected ImageView imageDetail;
     @BindView(R.id.author)
@@ -50,9 +55,9 @@ public class Details extends Fragment {
     @BindView(R.id.loadingPanel)
     protected RelativeLayout progressBar;
 
-    private Storage storage;
     private Bundle bundle;
     private Hit photo;
+    private DetailsPresenter mPresenter;
 
     @Nullable
     @Override
@@ -61,10 +66,9 @@ public class Details extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.item_details, container, false);
         ButterKnife.bind(this, view);
-        storage = ((ApplicationController) getActivity().getApplication())
-                .getStorage(view.getContext());
         bundle = getArguments();
         photo = (Hit) bundle.getSerializable("item");
+        createPresenter();
         return view;
     }
 
@@ -73,7 +77,7 @@ public class Details extends Fragment {
         super.onResume();
         loadImage();
         showItem();
-        if(storage.isFavourite(photo)){
+        if(mPresenter.checkFavourites(photo)){
             favButton.setImageResource(R.drawable.ic_fav_color);
             addOrRemoveText.setText(R.string.remove_from_fav);
         } else{
@@ -116,19 +120,28 @@ public class Details extends Fragment {
         FullScreen fullScreen = new FullScreen();
         bundle.putSerializable("link", photo.getLargeImageURL());
         fullScreen.setArguments(bundle);
-        ((MainActivity)getActivity()).setCurrentFragment(fullScreen);
+        ((MainActivity)getActivity()).setCurrentFragment(fullScreen, false);
     }
 
     @OnClick(R.id.fav_button)
     void saveFavourites() {
-        if (storage.isFavourite(photo)) {
-            storage.removeFromFavourites(photo);
-            favButton.setImageResource(R.drawable.ic_fav_borders);
-            addOrRemoveText.setText(R.string.add_to_fav);
-        } else {
-            storage.addToFavourites(photo);
-            favButton.setImageResource(R.drawable.ic_fav_color);
-            addOrRemoveText.setText(R.string.remove_from_fav);
-        }
+        mPresenter.actionFavourite(photo);
+    }
+
+    @Override
+    public void onAdd() {
+        favButton.setImageResource(R.drawable.ic_fav_color);
+        addOrRemoveText.setText(R.string.remove_from_fav);
+    }
+
+    @Override
+    public void onRemove() {
+        favButton.setImageResource(R.drawable.ic_fav_borders);
+        addOrRemoveText.setText(R.string.add_to_fav);
+    }
+
+    private void createPresenter() {
+        DetailsModel model = new DetailsModelImpl(getActivity().getApplication());
+        mPresenter = new DetailsPresenterImpl(this, model);
     }
 }

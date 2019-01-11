@@ -1,6 +1,5 @@
 package com.lpnu.mobile.models;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,12 +15,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AllListModelImpl implements AllListModel {
-
-    private Context mContext;
-
-    public AllListModelImpl(Context context) {
-        context = mContext;
-    }
 
     @Override
     public void requestDataFromServer(final Result result) {

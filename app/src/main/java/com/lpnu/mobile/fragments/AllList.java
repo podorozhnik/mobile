@@ -84,7 +84,7 @@ public class AllList extends Fragment implements AllListView {
     }
 
     private void createPresenter() {
-        AllListModel model = new AllListModelImpl(getActivity().getApplication());
+        AllListModel model = new AllListModelImpl();
         mPresenter = new AllListPresenterImpl(this, model);
     }
 }
